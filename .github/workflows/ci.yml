@@ -1,4 +1,4 @@
-name: Branch-Specific CI Workflow
+name: Branch-Specific CI Workflow Quant
 
 on:
   push:
