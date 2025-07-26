@@ -1,0 +1,43 @@
+name: Docker CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - docker_ci
+
+jobs:
+  build_and_test_container:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    - name: Install Dependencies
+      run: |
+        pip install scikit-learn joblib
+
+    - name: Train Model
+      run: python train.py
+
+    - name: Build Docker Image
+      run: docker build -t mlops-housing-image .
+
+    - name: Run Container and Verify Model
+      run: docker run mlops-housing-image
+
+    - name: Log in to DockerHub
+      env:
+        DOCKER_USER: ${{ secrets.karthikkumarg }}
+        DOCKER_PASSWORD: ${{ secrets.:63+Dg&Msup#qSK }}
+      run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
+
+    - name: Push Docker Image
+      run: |
+        docker tag mlops-housing-image ${{ secrets.DOCKER_USER }}/mlops-housing-image
+        docker push ${{ secrets.DOCKER_USER }}/mlops-housing-image
