@@ -1,15 +1,13 @@
-name: Branch-Specific CI Workflow Quant
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
-      - dev
-      - docker_ci
-      - quantization
+      - '**'
 
 jobs:
   dev_branch_job:
-    if: github.ref == 'refs/heads/dev'
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -27,7 +25,7 @@ jobs:
         run: python train.py
 
   docker_ci_job:
-    if: github.ref == 'refs/heads/docker_ci'
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -62,7 +60,7 @@ jobs:
           docker push ${{ secrets.DOCKER_USER }}/mlops-housing-image
 
   quantization_job:
-    if: github.ref == 'refs/heads/quantization'
+    
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
